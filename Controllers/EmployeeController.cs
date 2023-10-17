@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ServiceMarketingSystem.Data;
 using ServiceMarketingSystem.Models;
+using ServiceMarketingSystem.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,11 +15,14 @@ namespace ServiceMarketingSystem.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly DbConnection _Db;
-        private readonly IConfiguration configuaration;
-        public EmployeeController(DbConnection db, IConfiguration configuaration)
+        private readonly IJWTManagerService jWTManager;
+        private readonly IUserService userService;
+        public EmployeeController(DbConnection db, IJWTManagerService jWTManager,
+        IUserService userService)
         {
             _Db = db;
-            this.configuaration = configuaration;
+            this.jWTManager = jWTManager;
+            this.userService = userService;
         }
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] Employees newEmployee)
@@ -39,43 +43,91 @@ namespace ServiceMarketingSystem.Controllers
                 return Ok();
             }
             Employees employee = new Employees();
-            if(!existedEmail)
+            employee.EmpName = newEmployee.EmpName;
+            employee.EmpEmail = newEmployee.EmpEmail;
+            employee.EmpPhone = newEmployee.EmpPhone;
+            employee.EmpAddress = newEmployee.EmpAddress;
+            employee.Dob = newEmployee.Dob;
+            employee.StoreId = newEmployee.StoreId;
+            employee.RoleId = newEmployee.RoleId;
+            employee.Password = BCrypt.Net.BCrypt.HashPassword(newEmployee.Password);
+            if (!existedEmail)
             {
-                employee.EmpName = newEmployee.EmpName;
-                employee.EmpEmail = newEmployee.EmpEmail;
-                employee.EmpPhone = newEmployee.EmpPhone;
-                employee.EmpAddress = newEmployee.EmpAddress;
-                employee.Dob = newEmployee.Dob;
-                employee.StoreId = newEmployee.StoreId;
-                employee.RoleId = newEmployee.RoleId;
-                employee.Password = BCrypt.Net.BCrypt.HashPassword(newEmployee.Password);
                 await _Db.Employees.AddAsync(employee);
                 await _Db.SaveChangesAsync();
             }
-            return Ok(employee);
+            return Ok(newEmployee);
         }
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] Employees employees)
+        public async Task<IActionResult> Login([FromBody] Employees employee)
         {
-            Employees LEmp = await _Db.Employees.SingleAsync(e=>e.EmpEmail.Equals(employees.EmpEmail));
-            if(LEmp.Password.Length > 0)
+            var validEmp = await userService.IsValidUserAsync(employee.EmpEmail, employee.Password);
+            if (validEmp is null)
             {
-                bool isValidPassword = BCrypt.Net.BCrypt.Verify(employees.Password,LEmp.Password); 
-                if(isValidPassword)
-                {
-                    var authClaims = new List<Claim> {
-                    new Claim(ClaimTypes.Name,employees.EmpEmail)
-                    ,new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
-                    };
-                    var token = GetJwtToken(authClaims);
-                    return Ok(new
-                    {
-                        token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo
-                    });
-                }
+                return Unauthorized(new { Message = "Incorrect username or password!" });
             }
-            return Unauthorized();
+            var token = jWTManager.GenerateToken(employee.EmpEmail);
+            if (token is null)
+            {
+                return Unauthorized(new { Message = "Invalid Attempt!" });
+            }
+            UserRefreshToken rfToken = new UserRefreshToken()
+            {
+                RefreshToken = token.RefreshToken,
+                Email = validEmp.EmpEmail,
+                RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(24)
+            };
+
+            userService.AddUserRefreshTokens(rfToken);
+            userService.SaveCommit();
+
+            var userInfo = new Employees()
+            {
+                Id = validEmp.Id,
+                EmpEmail = validEmp.EmpEmail,
+                EmpName = validEmp.EmpName,
+                EmpPhone = validEmp.EmpPhone,
+                EmpAddress = validEmp.EmpAddress,
+                Dob = validEmp.Dob,
+                
+            };
+            return Ok(new { token, userInfo });
+        }
+        [HttpPost]
+        public IActionResult Refresh(Tokens token)
+        {
+            var principal = jWTManager.GetPrincipalFromExpiredToken(token.AccessToken);
+            var username = principal.Identity?.Name;
+            var role = principal.Claims.ToArray()[4].Value;
+            var savedRefreshToken = userService.GetSavedRefreshTokens(username, token.RefreshToken);
+
+            if (
+                savedRefreshToken?.RefreshToken != token.RefreshToken
+                || savedRefreshToken?.RefreshTokenExpiryTime <= DateTime.UtcNow
+            )
+            {
+                return Unauthorized(new { Message = "Invalid attempt!" });
+            }
+
+            var newJwtToken = jWTManager.GenerateRefreshToken(username);
+
+            if (newJwtToken == null)
+            {
+                return Unauthorized(new { Message = "Invalid attempt!" });
+            }
+
+            UserRefreshToken rfToken = new UserRefreshToken
+            {
+                RefreshToken = newJwtToken.RefreshToken,
+                Email = username,
+                RefreshTokenExpiryTime = DateTime.UtcNow.AddHours(24)
+            };
+
+            userService.DeleteUserRefreshTokens(username, token.RefreshToken);
+            userService.AddUserRefreshTokens(rfToken);
+            userService.SaveCommit();
+
+            return Ok(newJwtToken);
         }
         [HttpGet]
         public async Task<IActionResult> GetListSlug(int roleId)
@@ -111,18 +163,6 @@ namespace ServiceMarketingSystem.Controllers
                 return NotFound();
             }
             return Ok(employee);
-        }
-        private JwtSecurityToken GetJwtToken(List<Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuaration["JWT:Secret"]));
-            JwtSecurityToken token = new JwtSecurityToken(
-                    issuer: configuaration["JWT:ValidIssuer"],
-                    audience: configuaration["JWT:ValidAudience"],
-                    expires: DateTime.Now.AddMinutes(10),
-                    claims: authClaims,
-                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-            return token;
         }
     }
 }

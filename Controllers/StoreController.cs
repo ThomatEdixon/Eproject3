@@ -36,8 +36,7 @@ namespace ServiceMarketingSystem.Controllers
         [HttpGet]
         public IEnumerable<Stores> List()
         {
-            List<Stores> stores = _Db.Stores.ToList();
-            return stores;
+            return _Db.Stores.ToList();
         }
         [HttpDelete]
         [Route("id")]

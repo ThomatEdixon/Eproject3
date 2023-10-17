@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ServiceMarketingSystem.Services;
+using ServiceMarketingSystem.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager _Configuration = builder.Configuration;
 // Add services to the container.
@@ -34,6 +37,10 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddSingleton<IJWTManagerService, JWTManagerService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<DbConnection>();
+
 builder.Services.AddCors(options => options.AddPolicy(name: "MyRequestMVCAPI",
         policy =>
         {
@@ -59,6 +66,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("MyRequestMVCAPI");
+
+app.UseMiddleware<LoginMiddleware>();
 
 app.MapControllers();
 
