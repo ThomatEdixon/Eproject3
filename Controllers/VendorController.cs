@@ -1,4 +1,4 @@
-﻿using eProject3.Model;
+using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
 using ServiceMarketingSystem.Data;
 
@@ -70,7 +70,7 @@ namespace ServiceMarketingSystem.Controllers
             if(vendor == null)
             {
                 flag = false;
-                return NotFound($"Could not find customer with id = {newVendor.Id}");
+                return NotFound($"Could not find vendor with id = {newVendor.Id}");
             }
             if (!ModelState.IsValid)
             {

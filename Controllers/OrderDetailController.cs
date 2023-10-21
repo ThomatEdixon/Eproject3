@@ -1,4 +1,4 @@
-﻿using eProject3.Model;
+using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
 using ServiceMarketingSystem.Data;
 

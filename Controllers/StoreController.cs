@@ -14,14 +14,15 @@ namespace ServiceMarketingSystem.Controllers
             _Db = db;
         }
         [HttpPost]
-        public IActionResult Add(Stores store)
+        public IActionResult AddNewStore(Stores store)
         {
             bool flag = true;
-            if(store is null) {
+            if (store is null)
+            {
                 flag = false;
                 return NotFound();
             }
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 flag = false;
                 return Ok(ModelState);
@@ -34,16 +35,19 @@ namespace ServiceMarketingSystem.Controllers
             return Ok(store);
         }
         [HttpGet]
-        public IEnumerable<Stores> List()
+        public ActionResult<IEnumerable<Stores>> ListStore()
         {
+            if (_Db.Stores == null)
+            {
+                return NotFound();
+            }
             return _Db.Stores.ToList();
         }
         [HttpDelete]
-        [Route("id")]
-        public IActionResult Delete(int id)
+        public IActionResult DeleteStore(int id)
         {
             Stores? stores = _Db.Stores.Find(id);
-            if(stores is null)
+            if (stores is null)
             {
                 return NotFound();
             }
@@ -52,11 +56,12 @@ namespace ServiceMarketingSystem.Controllers
             return Ok(stores);
         }
         [HttpPut]
-        public IActionResult Update(Stores store) {
+        public IActionResult UpdateStore(Stores store)
+        {
             Stores? s = _Db.Stores.Find(store.Id);
-            if(s is null)
+            if (s is null)
             {
-                return NotFound();
+                return NotFound($"Could not find store with id = {store.Id}");
             }
             s.StoreAddress = store.StoreAddress;
             s.StoreName = store.StoreName;
@@ -65,11 +70,23 @@ namespace ServiceMarketingSystem.Controllers
             return Ok(store);
         }
         [HttpGet]
-        public IActionResult GetStoreByName(string name) {
-            Stores? store = _Db.Stores.SingleOrDefault(s=> s.StoreName.Equals(name));
-            if(store is null)
+        public IActionResult GetStoreByName(string name)
+        {
+            Stores? store = _Db.Stores.SingleOrDefault(s => s.StoreName.Equals(name));
+            if (store is null)
             {
                 return NotFound();
+            }
+            return Ok(store);
+        }
+
+        [HttpGet]
+        public IActionResult GetStoreById(int id)
+        {
+            Stores store = _Db.Stores.FirstOrDefault(s => s.Id == id);
+            if (store == null)
+            {
+                return NotFound($"Could not find store with id = {id}");
             }
             return Ok(store);
         }
