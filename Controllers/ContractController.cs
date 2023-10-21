@@ -1,15 +1,15 @@
-﻿using eProject3.Data;
-using eProject3.Model;
+﻿using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
 namespace eProject3.Controllers
 {
     [ApiController]
-    [Route("/Api/[Controller]/[Action]")]
+    [Route("/Service/[Controller]/[Action]")]
     public class ContractController : Controller
     {
-        private readonly DataConnection? _Db;
-        public ContractController(DataConnection? db)
+        private readonly DbConnection? _Db;
+        public ContractController(DbConnection? db)
         {
             _Db = db;
         }
@@ -99,7 +99,7 @@ namespace eProject3.Controllers
                 contract.Expire_date = newContract.Expire_date;
                 contract.Total_amount = newContract.Total_amount;
                 contract.Cus_id = newContract.Cus_id;
-                contract.Ser_id = newContract.Ser_id;
+                contract.Ser_id = newContract.Ser_id;   
                 contract.Deposit = newContract.Deposit;
                 _Db.Contracts.Update(contract);
                 _Db.SaveChanges();

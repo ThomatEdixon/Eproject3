@@ -1,15 +1,16 @@
-﻿using eProject3.Data;
+﻿
 using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
 namespace eProject3.Controllers
 {
     [ApiController]
-    [Route("/Api/[Controller]/[Action]")]
+    [Route("/Service/[Controller]/[Action]")]
     public class ServiceController : ControllerBase
     {
-        private readonly DataConnection? _Db;
-        public ServiceController(DataConnection? Db)
+        private readonly DbConnection? _Db;
+        public ServiceController(DbConnection? Db)
         {
             _Db = Db;
         }

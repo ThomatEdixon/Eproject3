@@ -1,15 +1,15 @@
-﻿using eProject3.Data;
-using eProject3.Model;
+﻿using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
 namespace eProject3.Controllers
 {
     [ApiController]
-    [Route("/Api/[COntroller]/[Action]")]
+    [Route("/Service/[COntroller]/[Action]")]
     public class OrderController : ControllerBase
     {
-        private readonly DataConnection _Db;
-        public OrderController(DataConnection db)
+        private readonly DbConnection _Db;
+        public OrderController(DbConnection db)
         {
             _Db = db;
         }
