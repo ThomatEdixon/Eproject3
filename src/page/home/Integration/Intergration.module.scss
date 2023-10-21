@@ -1,0 +1,39 @@
+.wrapper {
+  .main {
+    background-color: var(--bg1);
+    padding: 120px 150px;
+    text-align: center;
+
+    .inte-heading {
+      margin-bottom: 70px;
+
+      h3 {
+        font-size: 4.8rem;
+        font-weight: 500;
+        line-height: 68px;
+        letter-spacing: -1px;
+      }
+
+      p {
+        font-size: 1.8rem;
+        font-weight: 400;
+        line-height: 28px;
+      }
+    }
+
+    .inte-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+
+      .inte-logo-item {
+        background-color: var(--white);
+        padding: 28px;
+      }
+      .inte-logo-item.large {
+        flex-basis: 282px;
+        flex-grow: 2;
+      }
+    }
+  }
+}

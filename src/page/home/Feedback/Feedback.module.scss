@@ -1,0 +1,39 @@
+.wrapper {
+  padding: 120px 150px !important;
+  background-color: var(--bg1);
+  .main {
+
+    .feedback-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 70px;
+
+      .feedback-heading-title {
+        font-size: 4.8rem;
+        line-height: 58px;
+        letter-spacing: -1px;
+        font-weight: 500;
+        display: inline-block;
+        max-width: 570px;
+      }
+      .feedback-heading-link {
+        display: inline-block;
+        color: var(--green);
+        font-size: 2rem;
+        letter-spacing: 0.5px;
+
+        a {
+          color: var(--black);
+          text-decoration: none;
+          transition: color 0.1s ease-in;
+          margin-right: 5px;
+
+          &:hover {
+            color: var(--green);
+          }
+        }
+      }
+    }
+  }
+}

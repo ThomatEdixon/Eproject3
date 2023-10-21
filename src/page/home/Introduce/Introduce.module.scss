@@ -1,0 +1,98 @@
+.wrapper {
+    background-color: var(--bg1);
+
+  .main {
+    padding: 24px 150px 84px;
+
+    .introduce-wrapper {
+      .introduce-desc {
+        .desc-content {
+          h2 {
+            font-size: 6.4rem;
+            font-weight: 500;
+            line-height: 74px;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+          }
+
+          p {
+            font-size: 1.8rem;
+            line-height: 28px;
+            max-width: 545px;
+          }
+        }
+        .desc-try {
+          margin-top: 64px;
+
+          .try-form {
+            max-width: 457px;
+            padding: 6px;
+            background-color: var(--white);
+            border: 1px solid var(--grey);
+            border-radius: 8px;
+            display: flex;
+            margin-bottom: 12px;
+
+            input[name="required_email"] {
+              font-size: 1.4rem;
+              padding: 8px 16px;
+              line-height: 35px;
+              color: var(--black);
+              border: 0;
+              outline: 0;
+              flex: 1;
+            }
+
+            button {
+              color: var(--white);
+              background-color: var(--green);
+              border: 0;
+              border-radius: 8px;
+              font-size: 1.8rem;
+              font-weight: 500;
+              padding: 16px 24px;
+              letter-spacing: -0.25px;
+            }
+          }
+          .try-message {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--grey2);
+            text-indent: 16px;
+          }
+        }
+      }
+
+      .introduce-image {
+        img {
+          width: 100%;
+          border: 6px solid var(--grey2);
+          border-radius: 15px;
+        }
+      }
+    }
+
+    .customer-wrapper {
+      margin-top: 100px;
+
+      .customer-title {
+        h5 {
+          font-size: 1.6rem;
+          font-weight: 500;
+          line-height: 40px;
+        }
+      }
+
+      .customer-logo {
+        display: flex;
+        justify-content: space-between;
+
+        .logo-item{
+            img{
+                object-fit: contain;
+            }
+        }
+      }
+    }
+  }
+}

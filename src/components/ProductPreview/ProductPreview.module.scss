@@ -1,0 +1,249 @@
+.wrapper {
+    background: #fff;
+    max-height: 586px;
+
+    .item {
+        &.prd-thumb {
+            width: 55%;
+            position: relative;
+
+            img {
+                width: 100%;
+                max-height: 586px;
+                object-fit: cover;
+            }
+
+            &:hover .slider-arrows {
+                opacity: 1;
+            }
+
+            .slider-arrows {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                padding: 0px 15px;
+                opacity: 0;
+                transition: all 0.3s ease-in-out;
+
+                button {
+                    background: transparent;
+                    border: 0;
+                    height: 25px;
+                    width: 25px;
+
+                    .icon {
+                        line-height: 25px;
+                        color: var(--grey);
+                        font-size: 2.2rem;
+                        transition: all 0.3s ease-in-out;
+
+                        &:hover {
+                            color: var(--hover-color);
+                        }
+                    }
+
+                    &.btn-next {
+                        float: right;
+                    }
+                }
+            }
+        }
+
+        &.prd-info {
+            flex: 1;
+            padding: 90px 45px;
+
+            .content {
+                height: 100%;
+                overflow-y: scroll;
+                &::-webkit-scrollbar {
+                    width: 5px;
+                    background-color: #f5f5f5;
+                }
+                &::-webkit-scrollbar-track {
+                    background-color: var(--white);
+                }
+                &::-webkit-scrollbar-thumb {
+                    width: 5px;
+                    background-color: rgba(0, 0, 0, 0.1);
+                }
+
+                .prd-title {
+                    margin-bottom: 18px;
+                    font-size: 4rem;
+                    line-height: 50px;
+                    word-break: break-word;
+                    text-transform: capitalize;
+                }
+
+                .prd-price {
+                    font-size: 2.2rem;
+                    font-weight: 500;
+                    line-height: 24px;
+                    margin-bottom: 60px;
+
+                    .range {
+                        font-size: 2.2rem;
+                        display: inline-block;
+                        vertical-align: middle;
+                        font-weight: 500;
+                        margin-right: 10px;
+                    }
+                    .cost {
+                        color: var(--grey);
+                        margin-right: 5px;
+                    }
+                    .saleoff {
+                        margin-right: 10px;
+                    }
+                    .sale-label {
+                        position: relative;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        background: transparent;
+                        border: 2px solid #ff4545;
+                        border-right: 0;
+                        color: #ff4545;
+                        line-height: 22px;
+                        padding: 0px 12px;
+                        z-index: 2;
+                        vertical-align: middle;
+                        display: inline-block;
+
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            top: -1.5px;
+                            right: -22px;
+                            border: 13px solid #ff4545;
+                            border-left-color: transparent;
+                        }
+
+                        &::before {
+                            content: '';
+                            top: -1.5px;
+                            right: -25px;
+                            z-index: 1;
+                            position: absolute;
+                            border: 13px solid #fff;
+                            border-left-color: transparent;
+                            text-align: left;
+                        }
+                    }
+                }
+
+                .prd-desc {
+                    font-size: 1.4rem;
+                    font-weight: 400;
+                    line-height: 2;
+                    color: var(--grey);
+                    margin-bottom: 30px;
+                }
+
+                .prd-option {
+                    padding-left: 10px;
+                    height: 40px;
+                    line-height: 40px;
+                    color: var(--grey);
+                    border-color: var(--gray);
+                    font-size: 1.4rem;
+                    width: 100%;
+                    outline: none;
+                    margin-bottom: 25px;
+                }
+
+                .prd-total {
+                    .price {
+                        .cost {
+                            font-size: 1.4rem;
+                            color: var(--grey);
+                            margin-right: 5px;
+                        }
+                        .saleoff {
+                            font-size: 2.3rem;
+                            font-weight: 500;
+                        }
+
+                        margin-bottom: 10px;
+                    }
+
+                    .prd-inStock {
+                        color: var(--grey);
+                        font-size: 1.4rem;
+                        margin-bottom: 30px;
+                    }
+                }
+
+                .variations {
+                    display: flex;
+
+                    .quantity {
+                        border: 2px solid #b5b5b5;
+                        height: 64px;
+                        display: inline-block;
+                        margin-right: 7px;
+                        position: relative;
+
+                        .plus,
+                        .minus {
+                            position: absolute;
+                            background: transparent;
+                            line-height: 24px;
+                            border: none;
+                            width: 38px;
+                            height: 60px;
+                            transition: color 0.2s ease-in;
+                            color: var(--grey);
+                            font-size: 1.4rem;
+
+                            &:hover {
+                                color: var(--hover-color);
+                            }
+                        }
+
+                        .plus {
+                            top: 0;
+                            left: 0;
+                        }
+
+                        .minus {
+                            right: 0;
+                            bottom: 0;
+                        }
+
+                        input[name='quantity'] {
+                            width: 125px;
+                            border: 0;
+                            height: 60px;
+                            text-align: center;
+                            font-size: 18px;
+                            font-weight: 500;
+                            outline: none;
+
+                            &::-webkit-inner-spin-button {
+                                -webkit-appearance: none;
+                            }
+                        }
+                    }
+
+                    .add-to-cart {
+                        -webkit-transition: none;
+                        transition: none;
+                        text-transform: uppercase;
+                        font-weight: 500;
+                        font-size: 1.4rem;
+                        line-height: 64px;
+                        background: rgba(0, 0, 0, 0.75);
+                        color: var(--white);
+                        text-align: center;
+                        padding: 0 15px;
+                        display: inline-block;
+                        vertical-align: top;
+                        flex: 1;
+                    }
+                }
+            }
+        }
+    }
+}

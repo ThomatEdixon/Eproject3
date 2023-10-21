@@ -1,0 +1,62 @@
+.wrapper {
+  background-image: url("https://html-css-big-practice.vercel.app/desktop-bg.54d80505.svg");
+
+  .main {
+    padding: 120px 150px;
+    align-items: center;
+
+    .supercharge-content {
+      h2 {
+        max-width: 850px;
+        font-size: 6.4rem;
+        line-height: 74px;
+        letter-spacing: -1px;
+        font-weight: 600;
+        color: var(--white);
+        margin-bottom: 24px;
+      }
+
+      p {
+        color: var(--white);
+        font-size: 1.8rem;
+        line-height: 28px;
+        font-weight: 400;
+        opacity: 0.7;
+        max-width: 570px;
+      }
+    }
+    .supercharge-navigate {
+        
+
+      button {
+        background-color: var(--white);
+        border: none;
+        border-radius: 8px;
+        gap: 24px;
+        padding: 21px 24px 19px 32px;
+        box-shadow: 0 24px 32px #0000001a;
+        font-size: 1.8rem;
+        font-weight: 500;
+        transition: background-color .1s linear;
+        margin-bottom: 24px;
+
+        a{
+            color: currentColor;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        &:hover{
+            background-color: var(--yellow);
+        }
+      }
+
+
+      p{
+        color: var(--white);
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+.wrapper {
+  .main {
+    padding: 120px 150px 40px;
+    background-color: var(--bg1);
+
+    .footer-content {
+      margin-bottom: 80px;
+
+      .summary {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        .sum-content {
+          max-width: 270px;
+          font-size: 1.4rem;
+          font-weight: 400;
+          line-height: 25px;
+          margin: 0;
+        }
+
+        .sum-social {
+          a {
+            background-image: url("https://html-css-big-practice.vercel.app/social-media.31d2d537.svg");
+            background-repeat: no-repeat;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+
+            & + a {
+              margin-left: 12px;
+            }
+          }
+
+          .facebook {
+            background-position: -40px 0px;
+          }
+
+          .linkedin {
+            background-position: -80px 0px;
+          }
+        }
+      }
+
+      .list-menu {
+        .footer-menu {
+          width: fit-content;
+
+          .menu-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-transform: capitalize;
+          }
+
+          .menu-wrapper {
+            li {
+              background-color: var(--bg1);
+
+              a {
+                font-size: 1.4rem;
+                text-decoration: none;
+                color: var(--black);
+                transition: color 0.1s linear;
+
+                &:hover {
+                  color: var(--green);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .footer-wrapper {
+      border-top: 1px solid #7878783d;
+
+      .footer-copyright {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 45px;
+
+        .title {
+          font-size: 1.4rem;
+          font-weight: 400;
+          color: var(--grey2);
+          letter-spacing: .2px;
+        }
+        .legal-list {
+          li{
+            background-color: var(--bg1);
+
+            &+li{
+              padding-left: 30px;
+            }
+
+            a{
+              text-decoration: none;
+              color: var(--black);
+              font-size: 1.4rem;
+            }
+          }
+        }
+        .language-switcher {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .icon{
+            font-size: 2.4rem;
+            line-height: 31px;
+            vertical-align: middle;
+          }
+
+          .list{
+            background-color: var(--bg1);
+            line-height: 31px;
+            font-size: 1.4rem;
+            text-transform: capitalize;
+            outline: unset;
+            border: 0;
+          }
+        }
+      }
+    }
+  }
+}

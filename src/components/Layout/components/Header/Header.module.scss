@@ -1,0 +1,72 @@
+.wrapper {
+  background-color: var(--bg1);
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 150px 24px;
+
+    .menu {
+      .logo {
+        display: inline-block;
+        margin-right: 60px;
+
+        img {
+          margin-bottom: 10px;
+        }
+      }
+
+      .navigator {
+        display: inline-block;
+        
+        li {
+          background-color: var(--bg1);
+          padding-right: 20px;
+          padding-left: 20px;
+
+          a {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 1.4rem;
+            transition: color 0.1s linear;
+
+            &:hover {
+              color: var(--green);
+            }
+          }
+        }
+      }
+    }
+
+    .actions {
+      @mixin btn-animation($backgroundColor, $hoverBackgroundColor) {
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-weight: 500;
+        font-size: 1.4rem;
+        border: 1px solid var(--grey);
+        background-color: $backgroundColor;
+        transition: background-color 0.1s linear;
+
+        &:hover {
+          background-color: $hoverBackgroundColor;
+          color: var(--black);
+        }
+      }
+
+      .btn-login {
+        @include btn-animation(#fff, var(--yellow));
+        margin-right: 15px;
+        a{
+          color: currentColor;
+          text-decoration: none;
+        }
+      }
+
+      .btn-try {
+        color: #fff;
+        @include btn-animation(var(--black-navi), var(--yellow));
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+.wrapper {
+  padding: 120px 150px !important;
+  .main {
+    .news-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-bottom: 70px;
+
+      .news-heading-title {
+        font-size: 6.4rem;
+        line-height: 74px;
+        letter-spacing: -1px;
+        font-weight: 500;
+        display: inline-block;
+      }
+      .news-heading-link {
+        display: inline-block;
+        color: var(--green);
+        font-size: 2rem;
+        letter-spacing: .5px;
+
+        a{
+            color: var(--black);
+            text-decoration: none;
+            transition: color .1s ease-in;
+            margin-right: 5px;
+
+            &:hover{
+                color: var(--green);
+            }
+        }
+      }
+    }
+
+    .news-list {
+    }
+  }
+}

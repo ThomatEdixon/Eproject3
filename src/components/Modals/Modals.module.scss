@@ -1,0 +1,41 @@
+.wrapper {
+    position: relative;
+
+    .close {
+        position: absolute;
+        top: 20px;
+        right: 18px;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+
+        &:hover {
+            background: #e5e5e5;
+
+            span:first-child,
+            span:last-child {
+                transform: rotate(0deg);
+            }
+        }
+
+        span {
+            font-size: 2rem;
+            font-weight: 600;
+            position: absolute;
+            color: var(--grey);
+            transition: all 0.2s ease-out;
+        }
+
+        & span:first-child {
+            transform: rotate(45deg);
+            right: 4px;
+            top: -2px;
+        }
+        & span:last-child {
+            transform: rotate(-45deg);
+            right: 3px;
+            top: -2px;
+        }
+    }
+}
