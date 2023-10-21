@@ -35,7 +35,7 @@ namespace eProject3.Controllers
         {
             Boolean flag = true;
             Vendor vendor = _Db.Vendors.Find(product.Vendor_id);
-            if (product == null)
+            if(product == null)
             {
                 flag = false;
                 return NotFound();
@@ -45,13 +45,13 @@ namespace eProject3.Controllers
                 flag = false;
                 return Ok(ModelState);
             }
-            if (Dupplicated(product.Prd_name))
+            if(Dupplicated(product.Prd_name))
             {
                 flag = false;
                 ModelState.AddModelError("DupplicatedProductName", "Product Name is dupplicated!");
                 return Ok(ModelState);
             }
-            if (vendor is null)
+            if(vendor is null)
             {
                 flag = false;
                 ModelState.AddModelError("VendorNotFound", "Vendor is not found!");
@@ -73,14 +73,14 @@ namespace eProject3.Controllers
                 _Db.Products.Add(product);
                 await _Db.SaveChangesAsync();
             }
-            return Ok("ok");
+            return Ok(_Db.Products);
         }
 
         private Boolean Dupplicated(string name)
         {
             Boolean flag = false;
             List<Product> products = _Db.Products.Where(p => p.Prd_name.ToLower().Equals(name.ToLower())).ToList();
-            if (products.Any())
+            if(products.Any())
             {
                 flag = true;
             }
@@ -92,7 +92,7 @@ namespace eProject3.Controllers
         {
             Boolean flag = true;
             Product product = _Db.Products.Where(c => c.Id == newProduct.Id).FirstOrDefault();
-            if (product == null)
+            if(product == null)
             {
                 flag = false;
                 return NotFound($"Could not find product with id = {newProduct.Id}");
@@ -128,7 +128,7 @@ namespace eProject3.Controllers
                         // The image has been updated
                     }
                     else
-                    {
+            {
                         // Handle the case where the existing image does not exist
                     }
                 }
@@ -144,7 +144,7 @@ namespace eProject3.Controllers
             return Ok(_Db.Products);
         }
 
-        [HttpDelete]
+        [HttpDelete] 
         public ActionResult DeleteProduct(int id)
         {
             Product product = _Db.Products.FirstOrDefault(x => x.Id == id);
@@ -180,11 +180,24 @@ namespace eProject3.Controllers
         [HttpGet]
         public IActionResult GetListProductWithVendor()
         {
+
+            //var results = _Db.Products
+            //    .GroupBy(p => p.Vendor_id)
+            //    .Select(selector => new
+            //    {
+            //        VendorId = selector.Key,
+            //        ProductName = _Db.Products.Single(p => p.Vendor_id == selector.Key).Prd_name,
+            //        ProductPrice = _Db.Products.Single(p => p.Vendor_id == selector.Key).Prd_price,
+            //        VendorName = _Db.Vendors.Single(v => v.Id == selector.Key).Vendor_name,
+            //        VendorPhone = _Db.Vendors.Single(v => v.Id == selector.Key).Vendor_phone,
+            //        VendorEmail = _Db.Vendors.Single(v => v.Id == selector.Key).Vendor_email,
+            //        VendorAddress = _Db.Vendors.Single(v => v.Id == selector.Key).Vendor_address,
+            //    });
             var results = from p in _Db.Products
                           join v in _Db.Vendors on p.Vendor_id equals v.Id
                           select new
                           {
-                              ProductId = p.Id,
+                              ProductId= p.Id,
                               ProductName = p.Prd_name,
                               ProductAvatar = GetProductImage(p.ImagePath),
                               ProductPrice = p.Prd_price,
@@ -206,7 +219,7 @@ namespace eProject3.Controllers
                 string folderPath = imagePath;
 
                 using (var stream = new FileStream(folderPath, FileMode.Open))
-                {
+        {
                     // Read the image content and convert it to a byte array
                     byte[] imageBytes = new byte[stream.Length];
                     stream.Read(imageBytes, 0, (int)stream.Length);

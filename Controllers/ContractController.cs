@@ -99,7 +99,7 @@ namespace eProject3.Controllers
                 contract.Expire_date = newContract.Expire_date;
                 contract.Total_amount = newContract.Total_amount;
                 contract.Cus_id = newContract.Cus_id;
-                contract.Ser_id = newContract.Ser_id;
+                contract.Ser_id = newContract.Ser_id;   
                 contract.Deposit = newContract.Deposit;
                 _Db.Contracts.Update(contract);
                 _Db.SaveChanges();

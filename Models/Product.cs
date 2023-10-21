@@ -7,7 +7,7 @@ namespace eProject3.Model
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; set; }     
         [NotMapped]
         public IFormFile? Avatar { get; set; }
         public string? ImagePath { get; set; }
@@ -16,7 +16,7 @@ namespace eProject3.Model
         [Required]
         public double Prd_price { get; set; }
         [ForeignKey(nameof(Vendor.Id))]
-        public int Vendor_id { get; set; }
+        public int Vendor_id { get; set;}
         public virtual Vendor? vendor { get; }
     }
 }
