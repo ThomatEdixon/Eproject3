@@ -17,6 +17,8 @@ namespace ServiceMarketingSystem.Data
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()

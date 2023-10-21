@@ -1,9 +1,8 @@
-﻿
 using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
 using ServiceMarketingSystem.Data;
 
-namespace eProject3.Controllers
+namespace ServiceMarketingSystem.Controllers
 {
     [ApiController]
     [Route("/Service/[Controller]/[Action]")]
