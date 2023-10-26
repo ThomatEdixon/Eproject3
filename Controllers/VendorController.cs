@@ -1,15 +1,15 @@
-﻿using eProject3.Data;
 using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
-namespace eProject3.Controllers
+namespace ServiceMarketingSystem.Controllers
 {
     [ApiController]
-    [Route("/Api/[Controller]/[Action]")]
+    [Route("/Service/[Controller]/[Action]")]
     public class VendorController : ControllerBase
     {
-        private readonly DataConnection? _Db;
-        public VendorController(DataConnection? Db)
+        private readonly DbConnection? _Db;
+        public VendorController(DbConnection? Db)
         {
             _Db = Db;
         }
@@ -70,7 +70,7 @@ namespace eProject3.Controllers
             if(vendor == null)
             {
                 flag = false;
-                return NotFound($"Could not find customer with id = {newVendor.Id}");
+                return NotFound($"Could not find vendor with id = {newVendor.Id}");
             }
             if (!ModelState.IsValid)
             {

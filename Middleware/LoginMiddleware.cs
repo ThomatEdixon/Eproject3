@@ -1,34 +1,69 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using ServiceMarketingSystem.Data;
 using ServiceMarketingSystem.Models;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace ServiceMarketingSystem.Middleware
 {
     public class LoginMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly TokenValidationParameters _validationParameters;
+        private readonly IConfiguration configuration;
 
-        public LoginMiddleware(RequestDelegate next)
+        public LoginMiddleware(
+            RequestDelegate __next,
+            IOptions<JwtBearerOptions> jwtOptions,
+            IConfiguration configuration
+        )
         {
-            _next = next;
+            _next = __next ?? throw new ArgumentNullException("Not Found Next Delegate");
+            _validationParameters = jwtOptions.Value.TokenValidationParameters;
+            this.configuration = configuration;
         }
-        public async Task InvokeAsync(HttpContext context, DbConnection db)
+
+        public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
         {
-            // check action login 
-            if (context.Request.Path.Equals("/Sercice/Employee/Login"))
+            if (context == null)
+            {
+                throw new ArgumentNullException("Context not found");
+            }
+            if (context.Request.Path.Equals("/Service/Employee/Login", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(context);
                 return;
             }
-            if (context.Request.Path.Equals("/Sercice/Employee//Register"))
+            if (
+                context.Request.Path.Equals("/Service/Employee/Logout", StringComparison.OrdinalIgnoreCase)
+            )
             {
                 await _next(context);
                 return;
             }
-            // check authorization
+            if (
+                context.Request.Path.Equals("/Service/Employee/Register", StringComparison.OrdinalIgnoreCase
+                )
+            )
+            {
+                await _next(context);
+                return;
+            }
+            if (
+                context.Request.Path.Equals(
+                    "/Service/Employee/Refresh",
+                    StringComparison.OrdinalIgnoreCase
+                )
+            )
+            {
+                await _next(context);
+                return;
+            }
             string? AUTHORIZATION = "Authorization";
             if (!context.Request.Headers.TryGetValue(AUTHORIZATION, out var authorization))
             {
@@ -36,36 +71,51 @@ namespace ServiceMarketingSystem.Middleware
                 await context.Response.WriteAsync("Authorization was not provided");
                 return;
             }
-            // decode jwt token
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(authorization.ToString().Replace("Bearer ", ""));
-            var userEmail = token.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-            Employees? userLogin = db.Employees.FirstOrDefault(u => u.EmpEmail.Equals(userEmail));
-            if (userLogin is null)
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.ReadJwtToken(authorization.ToString().Replace("Bearer ", ""));
+            Debug.WriteLine(token);
+            var employeesEmail = token.Claims.First(c => c.Type == JwtRegisteredClaimNames.Name).Value;
+            Debug.WriteLine(employeesEmail);
+            string requestUri = context.Request.GetEncodedUrl();
+
+            string slug = requestUri;
+            Slug slugRole = null;
+
+            if (token is null)
             {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("User have not existence");
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Missing JWT token.");
                 return;
+            }
+            var key = Encoding.UTF8.GetBytes(configuration["JWT:Secret"]);
+
+            var _Db = serviceProvider.GetRequiredService<DbConnection>();
+
+            try
+            {
+                // Check slug
+                Employees employees = _Db.Employees.SingleOrDefault(e => e.EmpEmail.Equals(employeesEmail));
+                if (employeesEmail is null)
+                {
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("User have not existence");
+                    return;
+                }
+                List<Slug> slugs = _Db.Slug.Where(s => s.RoleId == employees.RoleId).ToList();
+                if (!slugs.Any())
+                {
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("Slugs was not provided");
+                    return;
+                }
+            }
+            catch (SecurityTokenException)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsJsonAsync(new { Message = "Invalid JWT token." });
             }
 
-            // get list slug
-            List<Slug> slugs = db.Slug.Where(s => s.RoleId == userLogin.RoleId).ToList();
-            if (!slugs.Any())
-            {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Slugs was not provided");
-                return;
-            }
-            //check url 
-            var url = context.Request.GetDisplayUrl();
-            Debug.WriteLine(url);
-            var s = slugs.FirstOrDefault(s => s.URI.Equals(url));
-            if (s is null)
-            {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("User can not run action");
-                return;
-            }
             await _next(context);
         }
     }

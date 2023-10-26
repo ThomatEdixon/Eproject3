@@ -1,15 +1,16 @@
-﻿using eProject3.Data;
 using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
+using ServiceMarketingSystem.Models;
 
-namespace eProject3.Controllers
+namespace ServiceMarketingSystem.Controllers
 {
     [ApiController]
-    [Route("/Api/[Controller]/[Action]")]
+    [Route("/Service/[Controller]/[Action]")]
     public class ServiceController : ControllerBase
     {
-        private readonly DataConnection? _Db;
-        public ServiceController(DataConnection? Db)
+        private readonly DbConnection? _Db;
+        public ServiceController(DbConnection? Db)
         {
             _Db = Db;
         }
@@ -64,21 +65,21 @@ namespace eProject3.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Service> UpdateService(int id, Service newService)
+        public ActionResult<Service> UpdateService(Service newService)
         {
-            Service service = _Db.Services.Find(id);
+            Service service = _Db.Services.Where(c => c.Id == newService.Id).FirstOrDefault();
             Boolean flag = true;
-            if(service == null)
+            if (service == null)
             {
                 flag = false;
-                return NotFound();
+                return NotFound($"Could not find service with id = {newService.Id}");
             }
             if (!ModelState.IsValid)
             {
                 flag = false;
                 return Ok(ModelState);
             }
-            if(flag)
+            if (flag)
             {
                 service.Ser_name = newService.Ser_name;
                 service.Ser_device = newService.Ser_device;

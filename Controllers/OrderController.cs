@@ -1,15 +1,15 @@
-﻿using eProject3.Data;
-using eProject3.Model;
+﻿using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
-namespace eProject3.Controllers
+namespace ServiceMarketingSystem.Controllers
 {
     [ApiController]
-    [Route("/Api/[COntroller]/[Action]")]
+    [Route("/Service/[COntroller]/[Action]")]
     public class OrderController : ControllerBase
     {
-        private readonly DataConnection _Db;
-        public OrderController(DataConnection db)
+        private readonly DbConnection _Db;
+        public OrderController(DbConnection db)
         {
             _Db = db;
         }
@@ -101,6 +101,29 @@ namespace eProject3.Controllers
             _Db.Orders.Remove(order);
             _Db.SaveChanges();
             return Ok(_Db.Orders);
+        }
+        [HttpGet]
+        public ActionResult GetRecordOrderByCustomer(int id)
+        {
+
+            var rs = (from o in _Db.Orders 
+                      join od in _Db.OrderDetails on o.Id equals od.Order_id
+                      join c in _Db.Customers on o.Customer_id equals c.Id
+                      join p in _Db.Products on o.Product_id equals p.Id           
+                      where c.Id == id
+                      select new
+                      {
+                        c.Cus_name,
+                        c.Cus_code,
+                        p.Prd_name,
+                        o.Status,
+                        o.Order_date,
+                        o.Quantity,
+                        od.Active,
+                        od.Account_code,
+                        od.Amount
+                      }).ToList();
+            return Ok(rs);
         }
 
     }

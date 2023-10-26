@@ -1,15 +1,15 @@
-﻿using eProject3.Data;
 using eProject3.Model;
 using Microsoft.AspNetCore.Mvc;
+using ServiceMarketingSystem.Data;
 
-namespace eProject3.Controllers
+namespace ServiceMarketingSystem.Controllers
 {
     [ApiController]
-    [Route("/Api/[Controller]/[Action]")]
+    [Route("/Service/[Controller]/[Action]")]
     public class ContractController : Controller
     {
-        private readonly DataConnection? _Db;
-        public ContractController(DataConnection? db)
+        private readonly DbConnection? _Db;
+        public ContractController(DbConnection? db)
         {
             _Db = db;
         }
@@ -78,14 +78,14 @@ namespace eProject3.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Contract> UpdateContract(int id, Contract newContract)
+        public ActionResult<Contract> UpdateContract(Contract newContract)
         {
             Boolean flag = true;
-            Contract contract = _Db.Contracts.Find(id);
-            if(contract == null)
+            Contract contract = _Db.Contracts.Where(c => c.Id == newContract.Id).FirstOrDefault();
+            if (contract == null)
             {
                 flag = false;
-                return NotFound();
+                return NotFound($"Could not find service with id = {newContract.Id}");
             }
             if (!ModelState.IsValid)
             {
@@ -118,6 +118,17 @@ namespace eProject3.Controllers
             _Db.Contracts.Remove(contract);
             _Db.SaveChanges();
             return Ok(_Db.Contracts);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetContractById(int id)
+        {
+            Contract contract = _Db.Contracts.FirstOrDefault(c => c.Id == id);
+            if (contract == null)
+            {
+                return NotFound($"Could not find contract with id = {id}");
+            }
+            return Ok(contract);
         }
     }
 }
